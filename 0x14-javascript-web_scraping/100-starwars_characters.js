@@ -1,23 +1,21 @@
 #!/usr/bin/node
-const request = require('request');
-const util = require('util');
-const pr = util.promisify(request);
-const url = 'https://swapi-api.hbtn.io/api/films/' + process.argv[2];
-await pr.get(url, (error, response, body) => {
+
+const req = require('request');
+const id = process.argv[2];
+const url = 'https://swapi-api.hbtn.io/api/films/';
+req.get(url + id, function (error, res, body) {
   if (error) {
     console.log(error);
   }
-  getCharacter(JSON.parse(body).characters, 0);
-});
-
-async function getCharacter(characters, index) {
-    await pr.get(characters[i], (errorInner, responseInner, bodyInner) => {
-      if (errorInner) {
-        console.log(errorInner);
+  const data = JSON.parse(body);
+  const dd = data.characters;
+  for (const i of dd) {
+    req.get(i, function (error, res, body1) {
+      if (error) {
+        console.log(error);
       }
-      console.log(JSON.parse(bodyInner).name);
-      if (index + 1 < characters.length) getCharacter(characters, index++);
+      const data1 = JSON.parse(body1);
+      console.log(data1.name);
     });
-}
-
-
+  }
+});
